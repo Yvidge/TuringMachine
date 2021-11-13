@@ -54,7 +54,6 @@ class TURINGMACHINE_API ATMManager : public AInfo
 
 private:
 	TArray<FString> Rows;
-	TArray<FString> Alphabet;
 	
 
 protected:
@@ -81,6 +80,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ParseDataFromFile();
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FString> Alphabet;
 
 	ATMManager();
 
