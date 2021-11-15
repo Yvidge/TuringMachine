@@ -2,10 +2,75 @@
 
 
 #include "TMManager.h"
+#include "Tape.h"
+
+void ATMManager::ExecuteReaction(FReactionStruct* Reaction)
+{
+
+	if(Reaction->bError)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("ERROR"));
+		return;
+	}
+
+	//Switching state
+	for (int i =0; i < States.Num(); ++i)
+	{
+		if(States[i].Name == Reaction->NewState)
+		{
+			CurrentState = &States[i];
+			if(CurrentState->Name == FinalStateSymbol)
+			{
+				FinishTuringMachine();
+			}
+			break;
+		}
+	}
+
+	//Writing symbol
+	if(Reaction->NewChar != Tape[TapePointer])
+	{
+		// add some effects
+	}
+	Tape[TapePointer] = Reaction->NewChar;
+	if(TapeActor)
+	{
+		TapeActor->UpdateSymbolByIndex(TapePointer);
+	}
+
+	//Moving
+	MoveTapePointer(Reaction->Move);
+}
+
+void ATMManager::InitializeTape()
+{
+	int UserTape = Tape.Num();
+	FString StringToAdd(ClearSymbol);
+	for (int i = 0; i < MaxTapeLength/2; ++i)
+	{
+		Tape.Insert(StringToAdd, 0);
+	}
+
+	int NumIterations = MaxTapeLength - Tape.Num();
+	for (int i = 0; i < NumIterations; ++i)
+	{
+		Tape.Add(StringToAdd);
+	}
+}
+
+void ATMManager::MoveTapePointer(EMoveReaction Move)
+{
+	if(Move == R) TapePointer++;
+	if (Move == L) TapePointer--;
+	
+}
 
 void ATMManager::BeginPlay()
 {
 	ParseDataFromFile();
+	InitializeTape();
+	TapeActor->GenerateTape();
+	Simulate();
 }
 
 void ATMManager::ParseDataFromFile()
@@ -66,4 +131,52 @@ void ATMManager::ParseDataFromFile()
 
 ATMManager::ATMManager()
 {
+	TapePointer = MaxTapeLength / 2;
+	
+}
+
+void ATMManager::Simulate()
+{
+	CurrentState = &States[0];
+	for(int i = 0; i < MaxSolveIterations; ++i)
+	{
+		if (bForceFinish) {
+			bForceFinish = false;
+			break;
+		}
+
+		if (Tape.IsValidIndex(TapePointer))
+		{
+			
+
+			for (int j = 0; j < Alphabet.Num(); ++j)
+			{
+				CurrentSymbol = Tape[TapePointer];
+				if (CurrentSymbol == Alphabet[j])
+				{
+					ExecuteReaction(&CurrentState->Reactions[j]);
+				}
+			}
+
+			/*for (int i = 0; i < CurrentState->Reactions.Num(); ++i)
+			{
+				if(CurrentSymbol == CurrentState->Reactions[i].NewChar)
+			}
+			for (FReactionStruct Reaction : CurrentState->Reactions)
+			{
+
+			}*/
+
+		}
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("SIMULATION FINISHED"));
+	
+	
+}
+
+void ATMManager::FinishTuringMachine()
+{
+	bForceFinish = true;
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("TURING MACHINE FINISHED EXECUTION"));
 }

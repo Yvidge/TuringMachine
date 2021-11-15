@@ -5,11 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
 #include "FileHelpers.h"
+
 #include "TMManager.generated.h"
 
 /**
  * 
  */
+
+class ATape;
 
 UENUM()
 enum EMoveReaction
@@ -54,10 +57,27 @@ class TURINGMACHINE_API ATMManager : public AInfo
 
 private:
 	TArray<FString> Rows;
-	
+
+	UPROPERTY()
+	int TapePointer;
+
+	bool bForceFinish = false;
+
+	int MaxTapeLength = 20;
+
+	//UFUNCTION()
+	void ExecuteReaction(FReactionStruct* Reaction);
+
+	UFUNCTION()
+	void InitializeTape();
+
+	UFUNCTION()
+	void MoveTapePointer(EMoveReaction Move);
+
+	FString CurrentSymbol;
 
 protected:
-	virtual void BeginPlay() override;;
+	virtual void BeginPlay() override;
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -65,6 +85,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString ErrorSymbol;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString ClearSymbol;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString ReactionSeparator = TEXT(" ");
@@ -75,6 +98,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString FinalStateSymbol = TEXT("qf");
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	ATape* TapeActor;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int MaxSolveIterations = 100;
+
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FStateStruct> States;
 
@@ -84,6 +113,17 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FString> Alphabet;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FString> Tape;
+
 	ATMManager();
 
+	UFUNCTION(BlueprintCallable)
+	void Simulate();
+
+	UFUNCTION()
+	void FinishTuringMachine();
+
+	//UPROPERTY()
+	FStateStruct* CurrentState;
 };
