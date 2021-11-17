@@ -14,15 +14,18 @@ void ATMManager::ExecuteReaction(FReactionStruct* Reaction)
 	}
 
 	//Switching state
+
+	if (Reaction->NewState == FinalStateSymbol)
+	{
+		FinishTuringMachine();
+	}
+
 	for (int i =0; i < States.Num(); ++i)
 	{
 		if(States[i].Name == Reaction->NewState)
 		{
 			CurrentState = &States[i];
-			if(CurrentState->Name == FinalStateSymbol)
-			{
-				FinishTuringMachine();
-			}
+			
 			break;
 		}
 	}
@@ -70,7 +73,7 @@ void ATMManager::BeginPlay()
 	ParseDataFromFile();
 	InitializeTape();
 	TapeActor->GenerateTape();
-	Simulate();
+	//Simulate();
 }
 
 void ATMManager::ParseDataFromFile()
@@ -137,6 +140,9 @@ ATMManager::ATMManager()
 
 void ATMManager::Simulate()
 {
+
+	DefaultTape = Tape; 
+
 	CurrentState = &States[0];
 	for(int i = 0; i < MaxSolveIterations; ++i)
 	{
@@ -147,26 +153,21 @@ void ATMManager::Simulate()
 
 		if (Tape.IsValidIndex(TapePointer))
 		{
-			
-
 			for (int j = 0; j < Alphabet.Num(); ++j)
 			{
 				CurrentSymbol = Tape[TapePointer];
 				if (CurrentSymbol == Alphabet[j])
 				{
+					FTapeActionStruct NewTapeAction;
+					NewTapeAction.StateName = CurrentState->Name;
+					NewTapeAction.Reaction = CurrentState->Reactions[j];
+					NewTapeAction.CurrentSymbol = CurrentSymbol;
+					TapeActionStack.Add(NewTapeAction);
+
 					ExecuteReaction(&CurrentState->Reactions[j]);
+					
 				}
 			}
-
-			/*for (int i = 0; i < CurrentState->Reactions.Num(); ++i)
-			{
-				if(CurrentSymbol == CurrentState->Reactions[i].NewChar)
-			}
-			for (FReactionStruct Reaction : CurrentState->Reactions)
-			{
-
-			}*/
-
 		}
 	}
 
@@ -174,6 +175,14 @@ void ATMManager::Simulate()
 	
 	
 }
+
+void ATMManager::ResetTuringMachine()
+{
+	Tape = DefaultTape;
+	CurrentState = &States[0];
+	TapeActor->GenerateTape();
+}
+
 
 void ATMManager::FinishTuringMachine()
 {

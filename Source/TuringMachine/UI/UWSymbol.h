@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class TURINGMACHINE_API UUWSymbol : public UUserWidget
 {
 	GENERATED_BODY()

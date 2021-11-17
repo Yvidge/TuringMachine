@@ -5,25 +5,24 @@
 
 #include "Components/TextBlock.h"
 
-void UUWReaction::InitializeFromData()
+void UUWReaction::InitializeFromData(const FReactionStruct Reaction)
 {
-	if(LinkedReactionStruct)
+	if (Reaction.bError)
 	{
-		if(LinkedReactionStruct->bError)
-		{
-			StateLabel->SetText(FText::FromString(""));
-			SymbolLabel->SetText(FText::FromString("ERR"));
-			MoveLabel->SetText(FText::FromString(""));
-		} else
-		{
-			StateLabel->SetText(FText::FromString(LinkedReactionStruct->NewState));
-			SymbolLabel->SetText(FText::FromString(LinkedReactionStruct->NewChar));
-			FText MoveText;
-			if (LinkedReactionStruct->Move == R) MoveText = FText::FromString("R");
-			if (LinkedReactionStruct->Move == L) MoveText = FText::FromString("L");
-			if (LinkedReactionStruct->Move == N) MoveText = FText::FromString("N");
-			MoveLabel->SetText(MoveText);
-		}
-		
+		StateLabel->SetText(FText::FromString(""));
+		SymbolLabel->SetText(FText::FromString("ERR"));
+		MoveLabel->SetText(FText::FromString(""));
 	}
+	else
+	{
+		StateLabel->SetText(FText::FromString(Reaction.NewState));
+		SymbolLabel->SetText(FText::FromString(Reaction.NewChar));
+		FText MoveText;
+		if (Reaction.Move == R) MoveText = FText::FromString("R");
+		if (Reaction.Move == L) MoveText = FText::FromString("L");
+		if (Reaction.Move == N) MoveText = FText::FromString("N");
+		MoveLabel->SetText(MoveText);
+	}
+
+
 }

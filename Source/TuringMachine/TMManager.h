@@ -50,6 +50,16 @@ struct FStateStruct
 	
 };
 
+USTRUCT(BlueprintType)
+struct FTapeActionStruct
+{
+	GENERATED_BODY()
+
+	FString StateName;
+	FString CurrentSymbol;
+	FReactionStruct Reaction;
+};
+
 UCLASS(Blueprintable)
 class TURINGMACHINE_API ATMManager : public AInfo
 {
@@ -75,6 +85,9 @@ private:
 	void MoveTapePointer(EMoveReaction Move);
 
 	FString CurrentSymbol;
+
+	UPROPERTY()
+	TArray<FString> DefaultTape;
 
 protected:
 	virtual void BeginPlay() override;
@@ -116,13 +129,22 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FString> Tape;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FTapeActionStruct> TapeActionStack;
+
 	ATMManager();
 
 	UFUNCTION(BlueprintCallable)
 	void Simulate();
 
+	UFUNCTION(BlueprintCallable)
+	void ResetTuringMachine();
+
 	UFUNCTION()
 	void FinishTuringMachine();
+
+	/*UFUNCTION(BlueprintCallable)
+	void GenerateTape*/
 
 	//UPROPERTY()
 	FStateStruct* CurrentState;

@@ -27,6 +27,11 @@ void ATape::Tick(float DeltaTime)
 
 void ATape::GenerateTape()
 {
+	for (ASymbolBase* Symbol : CreatedSymbols)
+	{
+		Symbol->Destroy();
+	}
+
 	if(Manager)
 	{
 		//Manager->
@@ -41,6 +46,10 @@ void ATape::GenerateTape()
 			CreatedSymbol->SetActorLocation(Loc);
 			CreatedSymbol->SetIndex(i);
 			CreatedSymbols.Add(CreatedSymbol);
+
+			
+			//EAttachmentRule Rule(EAttachmentRule::SnapToTarget);
+			CreatedSymbol->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
 		}
 	}
 }
@@ -49,4 +58,6 @@ void ATape::UpdateSymbolByIndex(int Index)
 {
 	CreatedSymbols[Index]->SetSymbol(Manager->Tape[Index]);
 }
+
+
 

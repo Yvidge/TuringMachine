@@ -44,4 +44,5 @@ public:
 
 	UFUNCTION()
 	void UpdateSymbolByIndex(int Index);
+
 };

@@ -5,28 +5,29 @@
 #include "CoreMinimal.h"
 #include "TMManager.h"
 #include "Blueprint/UserWidget.h"
-#include "UWReaction.generated.h"
+#include "UWEditableReaction.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract, Blueprintable)
-class TURINGMACHINE_API UUWReaction : public UUserWidget
+class TURINGMACHINE_API UUWEditableReaction : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* StateLabel;
+	class UEditableText* StateLabel;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* SymbolLabel;
+	class UEditableText* SymbolLabel;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* MoveLabel;
+	class UEditableText* MoveLabel;
 
+	FReactionStruct* LinkedReactionStruct;
 
 	UFUNCTION()
-	void InitializeFromData(const FReactionStruct Reaction);
+	void InitializeFromData();
 };

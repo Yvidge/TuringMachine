@@ -15,8 +15,8 @@ void UUWState::InitializeFromData()
 		{
 			UUWReaction* CreatedReaction = CreateWidget<UUWReaction>(this, ReactionWidgetClass);
 			Reactions.Add(CreatedReaction);
-			CreatedReaction->LinkedReactionStruct = &Reaction;
-			CreatedReaction->InitializeFromData();
+			//CreatedReaction->LinkedReactionStruct = &Reaction;
+			CreatedReaction->InitializeFromData(Reaction);
 			MainPanel->AddChild(CreatedReaction);
 		}
 
