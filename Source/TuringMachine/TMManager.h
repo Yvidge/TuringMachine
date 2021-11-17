@@ -60,6 +60,8 @@ struct FTapeActionStruct
 	FReactionStruct Reaction;
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionStackUpdated);
+
 UCLASS(Blueprintable)
 class TURINGMACHINE_API ATMManager : public AInfo
 {
@@ -88,6 +90,9 @@ private:
 
 	UPROPERTY()
 	TArray<FString> DefaultTape;
+
+	UFUNCTION()
+	void UpdateDefaultTape();
 
 protected:
 	virtual void BeginPlay() override;
@@ -138,14 +143,23 @@ public:
 	void Simulate();
 
 	UFUNCTION(BlueprintCallable)
+	void SimulateWithTapeUpdate();
+
+	UFUNCTION(BlueprintCallable)
 	void ResetTuringMachine();
 
 	UFUNCTION()
 	void FinishTuringMachine();
+
+	UFUNCTION(BlueprintCallable)
+	void SimulateSBS();
 
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/
 
 	//UPROPERTY()
 	FStateStruct* CurrentState;
+
+	UPROPERTY(BlueprintAssignable)
+	FActionStackUpdated OnActionStackUpdated;
 };

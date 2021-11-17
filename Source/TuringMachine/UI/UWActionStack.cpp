@@ -8,6 +8,8 @@
 
 void UUWActionStack::InitializeFromData(const TArray<FTapeActionStruct>& Actions)
 {
+	MainPanel->ClearChildren();
+
 	for (FTapeActionStruct Action : Actions)
 	{
 

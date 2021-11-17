@@ -68,10 +68,15 @@ void ATMManager::MoveTapePointer(EMoveReaction Move)
 	
 }
 
+void ATMManager::UpdateDefaultTape()
+{
+}
+
 void ATMManager::BeginPlay()
 {
 	ParseDataFromFile();
 	InitializeTape();
+	DefaultTape = Tape;
 	TapeActor->GenerateTape();
 	//Simulate();
 }
@@ -140,8 +145,7 @@ ATMManager::ATMManager()
 
 void ATMManager::Simulate()
 {
-
-	DefaultTape = Tape; 
+	TapeActionStack.Empty();
 
 	CurrentState = &States[0];
 	for(int i = 0; i < MaxSolveIterations; ++i)
@@ -172,15 +176,24 @@ void ATMManager::Simulate()
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("SIMULATION FINISHED"));
-	
-	
+	OnActionStackUpdated.Broadcast();
+}
+
+void ATMManager::SimulateWithTapeUpdate()
+{
+	Simulate();
+	TapeActor->GenerateTape();
 }
 
 void ATMManager::ResetTuringMachine()
 {
 	Tape = DefaultTape;
+	TapePointer = MaxTapeLength / 2;
+	TapeActionStack.Empty();
 	CurrentState = &States[0];
 	TapeActor->GenerateTape();
+
+	OnActionStackUpdated.Broadcast();
 }
 
 
@@ -188,4 +201,9 @@ void ATMManager::FinishTuringMachine()
 {
 	bForceFinish = true;
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("TURING MACHINE FINISHED EXECUTION"));
+}
+
+void ATMManager::SimulateSBS()
+{
+	Simulate();
 }

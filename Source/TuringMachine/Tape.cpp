@@ -8,7 +8,7 @@ ATape::ATape()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	Head = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head"));
 }
 
 // Called when the game starts or when spawned
@@ -51,12 +51,49 @@ void ATape::GenerateTape()
 			//EAttachmentRule Rule(EAttachmentRule::SnapToTarget);
 			CreatedSymbol->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
 		}
+
+		FVector Loc(CreatedSymbols[CreatedSymbols.Num()/2]->GetActorLocation());
+		Head->SetWorldLocation(Loc);
+
 	}
 }
 
 void ATape::UpdateSymbolByIndex(int Index)
 {
 	CreatedSymbols[Index]->SetSymbol(Manager->Tape[Index]);
+}
+
+void ATape::UpdateSymbolByIndexWithAnim(int Index)
+{
+	if (CreatedSymbols[Index] != Manager->Tape[Index])
+	{
+		CreatedSymbols[Index]->SetSymbol(Manager->Tape[Index]);
+		PlayHeadAnim();
+	}
+}
+
+void ATape::MoveTape(EMoveReaction Move)
+{
+	if(Move == R)
+	{
+		FVector Loc(-HorizontalSize, 0, 0);
+		AddActorWorldOffset(Loc);
+		Head->AddWorldOffset(-Loc);
+	}
+	if (Move == L)
+	{
+		FVector Loc(HorizontalSize, 0, 0);
+		AddActorWorldOffset(Loc);
+		Head->AddWorldOffset(-Loc);
+	}
+}
+
+void ATape::NextAction()
+{
+}
+
+void ATape::PreviousAction()
+{
 }
 
 

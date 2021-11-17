@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SymbolBase.h"
+#include "TMManager.h"
 
 #include "GameFramework/Actor.h"
 #include "Tape.generated.h"
@@ -26,11 +27,14 @@ protected:
 	UPROPERTY()
 	TArray<ASymbolBase*> CreatedSymbols;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UStaticMeshComponent* Head;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void GenerateTape();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -45,4 +49,18 @@ public:
 	UFUNCTION()
 	void UpdateSymbolByIndex(int Index);
 
+	UFUNCTION()
+	void UpdateSymbolByIndexWithAnim(int Index);
+
+	UFUNCTION(BlueprintCallable)
+	void MoveTape(EMoveReaction Move);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayHeadAnim();
+
+	UFUNCTION()
+	void NextAction();
+
+	UFUNCTION()
+	void PreviousAction();
 };
