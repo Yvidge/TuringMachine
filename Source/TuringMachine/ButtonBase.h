@@ -18,6 +18,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	UFUNCTION()
+	void HandlePressed(AActor* Actor, FKey Key);
 
 public:	
 	// Called every frame
@@ -28,6 +30,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnButtonPressed(AActor* Actor, FKey Key);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayPressedAnim();
 
 	
 };

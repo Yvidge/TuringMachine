@@ -14,7 +14,7 @@
 
 class ATape;
 
-UENUM()
+UENUM(BlueprintType)
 enum EMoveReaction
 {
 	L,
@@ -94,6 +94,9 @@ private:
 	UFUNCTION()
 	void UpdateDefaultTape();
 
+	UPROPERTY()
+	int TapeActionIndex = 0;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -153,6 +156,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SimulateSBS();
+
+	UFUNCTION(BlueprintCallable)
+	void NextActionOnTapeActor();
+
+	UFUNCTION(BlueprintCallable)
+	void PreviousActionOnTapeActor();
 
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/

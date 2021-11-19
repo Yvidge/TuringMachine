@@ -30,6 +30,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	UStaticMeshComponent* Head;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	USceneComponent* Root;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	USceneComponent* SymbolsAnchor;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -43,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASymbolBase> SymbolClass;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float HorizontalSize = 100;
 
 	UFUNCTION()
@@ -52,8 +58,9 @@ public:
 	UFUNCTION()
 	void UpdateSymbolByIndexWithAnim(int Index);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void MoveTape(EMoveReaction Move);
+	void MoveTape_Implementation(EMoveReaction Move);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayHeadAnim();

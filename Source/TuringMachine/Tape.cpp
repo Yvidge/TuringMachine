@@ -8,7 +8,12 @@ ATape::ATape()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
 	Head = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head"));
+	Head->SetupAttachment(Root);
+	SymbolsAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("SymbolsAnchor"));
+	SymbolsAnchor->SetupAttachment(Root);
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +36,7 @@ void ATape::GenerateTape()
 	{
 		Symbol->Destroy();
 	}
+	CreatedSymbols.Empty();
 
 	if(Manager)
 	{
@@ -49,10 +55,13 @@ void ATape::GenerateTape()
 
 			
 			//EAttachmentRule Rule(EAttachmentRule::SnapToTarget);
-			CreatedSymbol->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
+			CreatedSymbol->AttachToComponent(SymbolsAnchor, FAttachmentTransformRules(EAttachmentRule::KeepWorld, false));
 		}
 
 		FVector Loc(CreatedSymbols[CreatedSymbols.Num()/2]->GetActorLocation());
+		FVector RelativeLoc = Head->GetRelativeLocation();
+		RelativeLoc[0] = 0;
+		Loc += RelativeLoc;
 		Head->SetWorldLocation(Loc);
 
 	}
@@ -65,16 +74,17 @@ void ATape::UpdateSymbolByIndex(int Index)
 
 void ATape::UpdateSymbolByIndexWithAnim(int Index)
 {
-	if (CreatedSymbols[Index] != Manager->Tape[Index])
+	if (CreatedSymbols[Index]->GetSymbol() != Manager->Tape[Index])
 	{
 		CreatedSymbols[Index]->SetSymbol(Manager->Tape[Index]);
 		PlayHeadAnim();
 	}
 }
 
-void ATape::MoveTape(EMoveReaction Move)
+void ATape::MoveTape_Implementation(EMoveReaction Move)
 {
-	if(Move == R)
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("BRUH"));
+	if (Move == R)
 	{
 		FVector Loc(-HorizontalSize, 0, 0);
 		AddActorWorldOffset(Loc);

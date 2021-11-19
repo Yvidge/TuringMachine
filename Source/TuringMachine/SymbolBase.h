@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetSymbol(const FString &NewSymbol);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	const FString GetSymbol();
+
 	UFUNCTION()
 	void SetIndex(int NewIndex);
 };

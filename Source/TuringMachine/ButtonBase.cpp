@@ -16,6 +16,12 @@ void AButtonBase::BeginPlay()
 {
 	Super::BeginPlay();
 	OnClicked.AddDynamic(this, &AButtonBase::OnButtonPressed);
+	OnClicked.AddDynamic(this, &AButtonBase::HandlePressed);
+}
+
+void AButtonBase::HandlePressed(AActor* Actor, FKey Key)
+{
+	PlayPressedAnim();
 }
 
 // Called every frame

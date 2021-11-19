@@ -206,4 +206,19 @@ void ATMManager::FinishTuringMachine()
 void ATMManager::SimulateSBS()
 {
 	Simulate();
+	Tape = DefaultTape;
+	TapeActor->GenerateTape();
+}
+
+void ATMManager::NextActionOnTapeActor()
+{
+	TapeActor->MoveTape(TapeActionStack[TapeActionIndex].Reaction.Move);
+	TapeActionIndex++;
+
+	//TapeActor->UpdateSymbolByIndexWithAnim();
+}
+
+void ATMManager::PreviousActionOnTapeActor()
+{
+
 }
