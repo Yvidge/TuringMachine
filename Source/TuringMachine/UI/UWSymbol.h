@@ -21,5 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetText(FText Text);
-	
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FText GetText();
 };

@@ -28,4 +28,7 @@ public:
 
 	UFUNCTION()
 	void InitializeFromData(const FTapeActionStruct& Action);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetHighlighting(bool Value);
 };

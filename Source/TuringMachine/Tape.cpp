@@ -106,5 +106,15 @@ void ATape::PreviousAction()
 {
 }
 
+void ATape::SetSymbolByIndex(int Index, FString Symbol)
+{
+	CreatedSymbols[Index]->SetSymbol(Symbol);
+}
+
+FString ATape::GetSymbolByIndex(int Index)
+{
+	return CreatedSymbols[Index]->GetSymbol();
+}
+
 
 

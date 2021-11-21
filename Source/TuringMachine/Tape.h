@@ -70,4 +70,17 @@ public:
 
 	UFUNCTION()
 	void PreviousAction();
+
+	UFUNCTION(BlueprintCallable)
+	void SetSymbolByIndex(int Index, FString Symbol);
+
+	UFUNCTION()
+	FString GetSymbolByIndex(int Index);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SymbolUpdateDuration = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MoveAnimDuration = 0.5f;
+
 };

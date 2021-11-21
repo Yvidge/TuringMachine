@@ -61,6 +61,7 @@ struct FTapeActionStruct
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionStackUpdated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrentActionUpdated, int, CurrentActionIndex);
 
 UCLASS(Blueprintable)
 class TURINGMACHINE_API ATMManager : public AInfo
@@ -99,6 +100,11 @@ private:
 
 protected:
 	virtual void BeginPlay() override;
+
+	FTimerHandle WritingTimer;
+
+	UFUNCTION()
+	EMoveReaction RevertMove(EMoveReaction Move);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -160,6 +166,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void NextActionOnTapeActor();
 
+	UFUNCTION()
+	void NextActionSymbolAnimEnded();
+
+	UFUNCTION()
+	void PreviousActionSymbolAnimEnded();
+
 	UFUNCTION(BlueprintCallable)
 	void PreviousActionOnTapeActor();
 
@@ -171,4 +183,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FActionStackUpdated OnActionStackUpdated;
+
+	UPROPERTY(BlueprintAssignable)
+	FCurrentActionUpdated OnCurrentActionUpdated;
 };

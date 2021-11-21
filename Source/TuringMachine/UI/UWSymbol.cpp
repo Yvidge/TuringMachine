@@ -9,3 +9,8 @@ void UUWSymbol::SetText(FText Text)
 {
 	SymbolLabel->SetText(Text);
 }
+
+FText UUWSymbol::GetText()
+{
+	return SymbolLabel->GetText();
+}

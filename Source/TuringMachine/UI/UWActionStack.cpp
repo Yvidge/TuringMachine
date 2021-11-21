@@ -8,6 +8,7 @@
 
 void UUWActionStack::InitializeFromData(const TArray<FTapeActionStruct>& Actions)
 {
+	CreatedRows.Empty();
 	MainPanel->ClearChildren();
 
 	for (FTapeActionStruct Action : Actions)
@@ -16,6 +17,17 @@ void UUWActionStack::InitializeFromData(const TArray<FTapeActionStruct>& Actions
 		UUWActionStackRow* CreatedRow = CreateWidget<UUWActionStackRow>(this, ActionRowClass);
 		CreatedRow->InitializeFromData(Action);
 		MainPanel->AddChild(CreatedRow);
+		CreatedRows.Add(CreatedRow);
 	}
 
+}
+
+void UUWActionStack::SetHighlightedAction(int Index)
+{
+	for (UUWActionStackRow* Row : CreatedRows)
+	{
+		Row->SetHighlighting(false);
+	}
+
+	CreatedRows[Index]->SetHighlighting(true);
 }

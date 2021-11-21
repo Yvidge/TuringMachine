@@ -18,6 +18,10 @@ class TURINGMACHINE_API UUWActionStack : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	TArray<UUWActionStackRow*> CreatedRows;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -28,4 +32,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUWActionStackRow> ActionRowClass;
+
+	UFUNCTION(BlueprintCallable)
+	void SetHighlightedAction(int Index);
 };

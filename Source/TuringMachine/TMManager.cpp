@@ -63,7 +63,7 @@ void ATMManager::InitializeTape()
 
 void ATMManager::MoveTapePointer(EMoveReaction Move)
 {
-	if(Move == R) TapePointer++;
+	if (Move == R) TapePointer++;
 	if (Move == L) TapePointer--;
 	
 }
@@ -79,6 +79,13 @@ void ATMManager::BeginPlay()
 	DefaultTape = Tape;
 	TapeActor->GenerateTape();
 	//Simulate();
+}
+
+EMoveReaction ATMManager::RevertMove(EMoveReaction Move)
+{
+	if (Move == R) return L;
+	if (Move == L) return R;
+	return N;
 }
 
 void ATMManager::ParseDataFromFile()
@@ -208,17 +215,59 @@ void ATMManager::SimulateSBS()
 	Simulate();
 	Tape = DefaultTape;
 	TapeActor->GenerateTape();
+	TapeActionIndex = 0;
+	TapePointer = MaxTapeLength / 2;
+	OnCurrentActionUpdated.Broadcast(TapeActionIndex);
 }
 
 void ATMManager::NextActionOnTapeActor()
 {
+	//TapeActor->UpdateSymbolByIndex(TapeActionIndex);
+	if (TapeActionIndex != TapeActionStack.Num()-1) {
+		if (TapeActor->GetSymbolByIndex(TapePointer) != TapeActionStack[TapeActionIndex].Reaction.NewChar)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Orange, FString::Printf(TEXT("%s != %s"), *TapeActor->GetSymbolByIndex(TapePointer), *TapeActionStack[TapeActionIndex].Reaction.NewChar));
+			TapeActor->SetSymbolByIndex(TapePointer, TapeActionStack[TapeActionIndex].Reaction.NewChar);
+			TapeActor->PlayHeadAnim();
+			GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::NextActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
+		}
+		else
+		{
+			NextActionSymbolAnimEnded();
+		}
+		MoveTapePointer(TapeActionStack[TapeActionIndex].Reaction.Move);
+	}
+	
+	//TapeActor->UpdateSymbolByIndexWithAnim();
+}
+
+void ATMManager::NextActionSymbolAnimEnded()
+{
 	TapeActor->MoveTape(TapeActionStack[TapeActionIndex].Reaction.Move);
 	TapeActionIndex++;
+	OnCurrentActionUpdated.Broadcast(TapeActionIndex);
+}
 
-	//TapeActor->UpdateSymbolByIndexWithAnim();
+void ATMManager::PreviousActionSymbolAnimEnded()
+{
+	if (TapeActionStack[TapeActionIndex - 1].Reaction.NewChar != TapeActionStack[TapeActionIndex - 1].CurrentSymbol) {
+		TapeActor->SetSymbolByIndex(TapePointer, TapeActionStack[TapeActionIndex - 1].CurrentSymbol);
+		TapeActor->PlayHeadAnim();
+	}
+	TapeActionIndex--;
+
+	OnCurrentActionUpdated.Broadcast(TapeActionIndex);
 }
 
 void ATMManager::PreviousActionOnTapeActor()
 {
+	if(TapeActionIndex != 0)
+	{
+		TapeActor->MoveTape(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
+		MoveTapePointer(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
 
+		GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::PreviousActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
+
+		
+	}
 }
