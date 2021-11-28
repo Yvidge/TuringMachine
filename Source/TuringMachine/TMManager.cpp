@@ -3,6 +3,7 @@
 
 #include "TMManager.h"
 #include "Tape.h"
+#include "Misc/FileHelper.h"
 
 void ATMManager::ExecuteReaction(FReactionStruct* Reaction)
 {

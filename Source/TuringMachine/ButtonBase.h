@@ -34,5 +34,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayPressedAnim();
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bActive;
 	
 };
