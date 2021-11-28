@@ -72,6 +72,7 @@ void ATMManager::MoveTapePointer(EMoveReaction Move)
 
 void ATMManager::UpdateDefaultTape()
 {
+	DefaultTape = Tape;
 }
 
 void ATMManager::BeginPlay()
@@ -211,7 +212,6 @@ void ATMManager::ResetTuringMachine()
 	OnActionStackUpdated.Broadcast();
 }
 
-
 void ATMManager::FinishTuringMachine()
 {
 	bForceFinish = true;
@@ -283,4 +283,13 @@ void ATMManager::PreviousActionOnTapeActor()
 void ATMManager::LoadTMFromFile()
 {
 
+}
+
+void ATMManager::UpdateTapeSymbolByIndex(int Index, FString NewSymbol)
+{
+	if(Tape.IsValidIndex(Index))
+	{
+		Tape[Index] = NewSymbol;
+		UpdateDefaultTape();
+	}
 }

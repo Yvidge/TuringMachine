@@ -178,6 +178,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadTMFromFile();
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateTapeSymbolByIndex(int Index, FString NewSymbol);
+
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/
 

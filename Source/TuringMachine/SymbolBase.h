@@ -33,4 +33,7 @@ public:
 
 	UFUNCTION()
 	void SetIndex(int NewIndex);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	int GetIndex();
 };

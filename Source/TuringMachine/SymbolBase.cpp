@@ -36,3 +36,8 @@ void ASymbolBase::SetIndex(int NewIndex)
 {
 	Index = NewIndex;
 }
+
+int ASymbolBase::GetIndex()
+{
+	return Index;
+}
