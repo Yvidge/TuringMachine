@@ -13,6 +13,10 @@
 void UUWTuringMachine::InitializeFromData()
 {
 
+	StateWidgets.Empty();
+	SymbolPanel->ClearChildren();
+	StatePanel->ClearChildren();
+
 	if(Manager)
 	{
 		

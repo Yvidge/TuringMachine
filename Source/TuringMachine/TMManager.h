@@ -60,6 +60,7 @@ struct FTapeActionStruct
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FActionStackUpdated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewTuringMachineLoaded);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCurrentActionUpdated, int, CurrentActionIndex);
 
 UCLASS(Blueprintable)
@@ -174,6 +175,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PreviousActionOnTapeActor();
 
+	UFUNCTION(BlueprintCallable)
+	void LoadTMFromFile();
+
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/
 
@@ -185,4 +189,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FCurrentActionUpdated OnCurrentActionUpdated;
+
+	UPROPERTY(BlueprintAssignable)
+	FNewTuringMachineLoaded OnNewTuringMachineLoaded;
 };

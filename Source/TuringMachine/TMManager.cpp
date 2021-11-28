@@ -2,6 +2,7 @@
 
 
 #include "TMManager.h"
+
 #include "Tape.h"
 #include "Misc/FileHelper.h"
 
@@ -91,6 +92,11 @@ EMoveReaction ATMManager::RevertMove(EMoveReaction Move)
 
 void ATMManager::ParseDataFromFile()
 {
+	States.Empty();
+	Alphabet.Empty();
+	Rows.Empty();
+
+
 	FFileHelper::LoadFileToStringArray(Rows, *FilePath);
 
 	TArray<FString> StateNames;
@@ -143,6 +149,7 @@ void ATMManager::ParseDataFromFile()
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Emerald, TEXT("Parsing Completed"));
+	OnNewTuringMachineLoaded.Broadcast();
 }
 
 ATMManager::ATMManager()
@@ -271,4 +278,9 @@ void ATMManager::PreviousActionOnTapeActor()
 
 		
 	}
+}
+
+void ATMManager::LoadTMFromFile()
+{
+
 }
