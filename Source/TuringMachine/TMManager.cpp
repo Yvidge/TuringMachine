@@ -161,6 +161,8 @@ ATMManager::ATMManager()
 
 void ATMManager::Simulate()
 {
+	if (!bCorrectTape) return;
+
 	TapeActionStack.Empty();
 
 	CurrentState = &States[0];
@@ -197,6 +199,7 @@ void ATMManager::Simulate()
 
 void ATMManager::SimulateWithTapeUpdate()
 {
+	if (!bCorrectTape) return;
 	Simulate();
 	TapeActor->GenerateTape();
 }
@@ -220,6 +223,8 @@ void ATMManager::FinishTuringMachine()
 
 void ATMManager::SimulateSBS()
 {
+	if (!bCorrectTape) return;
+
 	Simulate();
 	Tape = DefaultTape;
 	TapeActor->GenerateTape();

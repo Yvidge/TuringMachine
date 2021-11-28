@@ -107,6 +107,10 @@ protected:
 	EMoveReaction RevertMove(EMoveReaction Move);
 
 public:
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bCorrectTape = true;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString FilePath; // = TEXT("C:\Users\Admin\Downloads\Test.csv");
 
