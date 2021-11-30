@@ -26,11 +26,11 @@ struct FReactionStruct
 {
 	GENERATED_BODY()
 
-	FString NewState;
+	FString NewState = "qf";
 
-	FString NewChar;
+	FString NewChar = "a";
 
-	EMoveReaction Move;
+	EMoveReaction Move = R;
 
 	bool bError = 0;
 
@@ -184,6 +184,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateTapeSymbolByIndex(int Index, FString NewSymbol);
+
+	UFUNCTION(BlueprintCallable)
+	void AddNewState();
+
+	UFUNCTION(BlueprintCallable)
+	void AddNewSymbolToAlphabet();
 
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/

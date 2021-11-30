@@ -62,5 +62,6 @@ void UUWTuringMachine::AddNewState()
 
 void UUWTuringMachine::NativeOnInitialized()
 {
-	
+	Super::NativeOnInitialized();
+	//NewStateButton->OnClick
 }

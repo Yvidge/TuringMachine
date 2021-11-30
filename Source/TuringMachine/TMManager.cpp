@@ -3,6 +3,8 @@
 
 #include "TMManager.h"
 
+#include <string>
+
 #include "Tape.h"
 #include "Misc/FileHelper.h"
 
@@ -297,4 +299,33 @@ void ATMManager::UpdateTapeSymbolByIndex(int Index, FString NewSymbol)
 		Tape[Index] = NewSymbol;
 		UpdateDefaultTape();
 	}
+}
+
+void ATMManager::AddNewState()
+{
+	FStateStruct NewState;
+	NewState.Name = FString::FromInt(FMath::Rand());//TEXT("Q");
+	for (int i = 0; i < Alphabet.Num(); ++i)
+	{
+		FReactionStruct NewReaction;
+		NewState.Reactions.Add(NewReaction);
+	}
+	States.Add(NewState);
+	OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
+}
+
+void ATMManager::AddNewSymbolToAlphabet()
+{
+	Alphabet.Add(TEXT("a"));
+	for (int i = 0; i < States.Num(); ++i)
+	{
+		FStateStruct* State = &States[i];
+		FReactionStruct NewReaction;
+		State->Reactions.Add(NewReaction);
+
+		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("BRUH"));
+		//States[i].Name = "P";
+		//State->Name = "P";
+	}
+	OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
 }
