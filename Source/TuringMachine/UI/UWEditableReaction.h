@@ -15,6 +15,17 @@ class TURINGMACHINE_API UUWEditableReaction : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsStateCorrect(const FText State, const ATMManager *Manager);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsSymbolCorrect(const FText Symbol, const ATMManager* Manager);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsMoveCorrect(const FText Move, const ATMManager* Manager);
+
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -30,4 +41,7 @@ public:
 
 	UFUNCTION()
 	void InitializeFromData();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateLinkedStruct();
 };

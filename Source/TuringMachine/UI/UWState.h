@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TMManager.h"
+#include "UWEditableReaction.h"
 #include "UWReaction.h"
 #include "Blueprint/UserWidget.h"
 #include "UWState.generated.h"
@@ -19,7 +20,7 @@ class TURINGMACHINE_API UUWState : public UUserWidget
 public:
 
 	UPROPERTY()
-	TArray<UUWReaction*> Reactions;
+	TArray<UUWEditableReaction*> Reactions;
 
 	//UPROPERTY()
 	FStateStruct* LinkedStateStruct;
@@ -33,13 +34,14 @@ public:
 	class UVerticalBox* MainPanel;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<UUWReaction> ReactionWidgetClass;
+	TSubclassOf<UUWEditableReaction> ReactionWidgetClass;
 
 	UFUNCTION(BlueprintCallable)
 	void InitializeFromData();
 
 protected:
 	virtual void NativeOnInitialized() override;
+
 
 private:
 

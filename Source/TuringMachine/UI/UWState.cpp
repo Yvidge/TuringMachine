@@ -11,12 +11,12 @@ void UUWState::InitializeFromData()
 	if (LinkedStateStruct)
 	{
 		StateLabel->SetText(FText::FromString(LinkedStateStruct->Name));
-		for (FReactionStruct Reaction : LinkedStateStruct->Reactions)
+		for (int i = 0; i < LinkedStateStruct->Reactions.Num(); ++i)
 		{
-			UUWReaction* CreatedReaction = CreateWidget<UUWReaction>(this, ReactionWidgetClass);
+			UUWEditableReaction* CreatedReaction = CreateWidget<UUWEditableReaction>(this, ReactionWidgetClass);
 			Reactions.Add(CreatedReaction);
-			//CreatedReaction->LinkedReactionStruct = &Reaction;
-			CreatedReaction->InitializeFromData(Reaction);
+			CreatedReaction->LinkedReactionStruct = &(LinkedStateStruct->Reactions[i]);
+			CreatedReaction->InitializeFromData();
 			MainPanel->AddChild(CreatedReaction);
 		}
 

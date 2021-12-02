@@ -20,10 +20,10 @@ void UUWTuringMachine::InitializeFromData()
 	if(Manager)
 	{
 		
-		for (auto State : Manager->States)
+		for (int i = 0; i < Manager->States.Num(); ++i)
 		{
 			UUWState* CreatedState = CreateWidget<UUWState>(this, StateWidgetClass);
-			CreatedState->LinkedStateStruct = &State;
+			CreatedState->LinkedStateStruct = &(Manager->States[i]);
 			StateWidgets.Add(CreatedState);
 			CreatedState->InitializeFromData();
 			StatePanel->AddChildToHorizontalBox(CreatedState);
