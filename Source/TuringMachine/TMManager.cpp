@@ -3,7 +3,6 @@
 
 #include "TMManager.h"
 
-#include <string>
 
 #include "Tape.h"
 #include "Misc/FileHelper.h"
@@ -79,7 +78,7 @@ void ATMManager::UpdateDefaultTape()
 
 void ATMManager::BeginPlay()
 {
-	ParseDataFromFile();
+	//ParseDataFromFile();
 	InitializeTape();
 	DefaultTape = Tape;
 	TapeActor->GenerateTape();
@@ -127,7 +126,7 @@ void ATMManager::ParseDataFromFile()
 		{
 			if (Data == ErrorSymbol)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("НУ ПИЗДЕЦ БЛЯ"));
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("НУ ПИЗДЕЦ БЛЯ"));
 				FReactionStruct NewReaction;
 				NewReaction.bError = true;
 				States[StateIndex].Reactions.Add(NewReaction);

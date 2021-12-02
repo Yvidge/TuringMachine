@@ -37,15 +37,21 @@ void UUWTuringMachine::InitializeFromData()
 		
 		//SymbolPanel->AddChildToVerticalBox(CreateWidget<UUWButton>(this, ButtonWidgetClass));
 		
-		UTextBlock* CreatedSpacer = WidgetTree->ConstructWidget<UTextBlock>();
-			//CreateWidget<UTextBlock>(this, SymbolWidgetClass);
-		SymbolPanel->AddChildToVerticalBox(CreatedSpacer);
-		CreatedSpacer->SetText(FText::FromString("a"));
-		CreatedSpacer->SetOpacity(0.0f);
-		FSlateFontInfo Font;
-		Font.Size = 200;
-		Font.OutlineSettings.OutlineSize = 0;
-		CreatedSpacer->SetFont(Font);
+		UUWSymbol* CreatedSpacer = CreateWidget<UUWSymbol>(this, SymbolWidgetClass);
+		//WidgetTree->ConstructWidget<UTextBlock>();
+		
+			
+		//SymbolPanel->AddChildToVerticalBox(CreatedSpacer);
+		//CreatedSpacer->SetText(FText::FromString("a"));
+		//FLinearColor Color(0, 0, 0, 0);
+		//FSlateColor SlateColor(Color);
+		//CreatedSpacer->SymbolLabel->WidgetStyle.ColorAndOpacity = SlateColor;
+		////CreatedSpacer->SetOpacity(0.0f);
+		//FSlateFontInfo Font;
+		//Font.Size = 200;
+		//Font.OutlineSettings.OutlineSize = 0;
+		//CreatedSpacer->SymbolLabel->WidgetStyle.SetFont(Font);
+		//CreatedSpacer->SetFont(Font);
 
 		for (FString Symbol : Manager->Alphabet)
 		{

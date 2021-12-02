@@ -76,8 +76,6 @@ private:
 
 	bool bForceFinish = false;
 
-	int MaxTapeLength = 20;
-
 	//UFUNCTION()
 	void ExecuteReaction(FReactionStruct* Reaction);
 
@@ -105,6 +103,9 @@ protected:
 
 	UFUNCTION()
 	EMoveReaction RevertMove(EMoveReaction Move);
+
+	UPROPERTY(EditAnywhere)
+	int MaxTapeLength = 20;
 
 public:
 

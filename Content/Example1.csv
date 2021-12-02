@@ -1,0 +1,5 @@
+,q0,q1,q2
+a,q0 a r,err,q2 a l
+b,q0 b r,err,q2 b l
+c,q0 c r,err,q2 c l
+/\,q1 b r,q2 c l,qf /\ r
