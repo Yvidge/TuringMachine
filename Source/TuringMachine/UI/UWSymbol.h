@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TMManager.h"
 #include "Blueprint/UserWidget.h"
 #include "UWSymbol.generated.h"
 
@@ -17,11 +18,21 @@ class TURINGMACHINE_API UUWSymbol : public UUserWidget
 public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* SymbolLabel;
+	class UEditableText* SymbolLabel;
 
 	UFUNCTION(BlueprintCallable)
 	void SetText(FText Text);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FText GetText();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateSymbolInAlphabet(const FString NewSymbol, ATMManager* Manager);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckIsNewSymbolUnique(const FString NewSymbol, const ATMManager* Manager);
+
+	UPROPERTY(BlueprintReadWrite)
+	FString PreviousSymbol;
+
 };

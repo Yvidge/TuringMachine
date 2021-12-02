@@ -5,6 +5,7 @@
 
 #include "UWReaction.h"
 #include "UWSymbol.h"
+#include "Components/TextBlock.h"
 
 void UUWActionStackRow::InitializeFromData(const FTapeActionStruct& Action)
 {

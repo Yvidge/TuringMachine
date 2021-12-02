@@ -304,7 +304,9 @@ void ATMManager::UpdateTapeSymbolByIndex(int Index, FString NewSymbol)
 void ATMManager::AddNewState()
 {
 	FStateStruct NewState;
-	NewState.Name = FString::FromInt(FMath::Rand());//TEXT("Q");
+	FString Name("q");
+	Name.Append(FString::FromInt(FMath::Rand() % 100));
+	NewState.Name = Name;//TEXT("Q");
 	for (int i = 0; i < Alphabet.Num(); ++i)
 	{
 		FReactionStruct NewReaction;
@@ -316,7 +318,8 @@ void ATMManager::AddNewState()
 
 void ATMManager::AddNewSymbolToAlphabet()
 {
-	Alphabet.Add(TEXT("a"));
+	FString NewSymbol = Alphabet.Last();
+	Alphabet.Add(NewSymbol.AppendChar('1'));
 	for (int i = 0; i < States.Num(); ++i)
 	{
 		FStateStruct* State = &States[i];

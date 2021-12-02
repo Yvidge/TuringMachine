@@ -18,10 +18,10 @@ class TURINGMACHINE_API UUWActionStackRow : public UUserWidget
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
-	class UUWSymbol* StateLabel;
+	class UTextBlock* StateLabel;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
-	class UUWSymbol* CurrentSymbolLabel;
+	class UTextBlock* CurrentSymbolLabel;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (BindWidget))
 	class UUWReaction* ReactionLabel;

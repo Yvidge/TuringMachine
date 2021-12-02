@@ -5,10 +5,12 @@
 
 #include "UWButton.h"
 #include "UWState.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+#include "Components/EditableText.h"
 
 void UUWTuringMachine::InitializeFromData()
 {
@@ -34,6 +36,16 @@ void UUWTuringMachine::InitializeFromData()
 		StatePanel->AddChildToHorizontalBox(NewStateButton);
 		
 		//SymbolPanel->AddChildToVerticalBox(CreateWidget<UUWButton>(this, ButtonWidgetClass));
+		
+		UTextBlock* CreatedSpacer = WidgetTree->ConstructWidget<UTextBlock>();
+			//CreateWidget<UTextBlock>(this, SymbolWidgetClass);
+		SymbolPanel->AddChildToVerticalBox(CreatedSpacer);
+		CreatedSpacer->SetText(FText::FromString("a"));
+		CreatedSpacer->SetOpacity(0.0f);
+		FSlateFontInfo Font;
+		Font.Size = 200;
+		Font.OutlineSettings.OutlineSize = 0;
+		CreatedSpacer->SetFont(Font);
 
 		for (FString Symbol : Manager->Alphabet)
 		{
