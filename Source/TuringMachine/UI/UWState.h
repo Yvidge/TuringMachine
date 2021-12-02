@@ -25,10 +25,12 @@ public:
 	//UPROPERTY()
 	FStateStruct* LinkedStateStruct;
 
-	//UUWState(FStateStruct* State): LinkedStateStruct(State) {}
+
+	/*UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* StateLabel;*/
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* StateLabel;
+	class UEditableText* StateLabel;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UVerticalBox* MainPanel;
@@ -39,9 +41,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeFromData();
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateLinkedStateName(const FText Name);
+
 protected:
 	virtual void NativeOnInitialized() override;
-
 
 private:
 

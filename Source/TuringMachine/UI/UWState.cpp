@@ -5,6 +5,7 @@
 
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
+#include "Components/EditableText.h"
 
 void UUWState::InitializeFromData()
 {
@@ -24,6 +25,14 @@ void UUWState::InitializeFromData()
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("INIT ERROR IN UWSTATE"));
+	}
+}
+
+void UUWState::UpdateLinkedStateName(const FText Name)
+{
+	if(LinkedStateStruct)
+	{
+		LinkedStateStruct->Name = Name.ToString();
 	}
 }
 
