@@ -13,6 +13,7 @@ void ATMManager::ExecuteReaction(FReactionStruct* Reaction)
 	if(Reaction->bError)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("ERROR"));
+		FinishTuringMachine();
 		return;
 	}
 
@@ -76,12 +77,37 @@ void ATMManager::UpdateDefaultTape()
 	DefaultTape = Tape;
 }
 
+FString ATMManager::GenerateUniqueStateName()
+{
+	FString Name("q");
+	
+	for (int i = 0; i < 100; ++i)
+	{
+		FString CreatedName = Name;
+		CreatedName.Append(FString::FromInt(i));
+		if (IsStateNameUnique(CreatedName)) return CreatedName;
+	}
+	return Name;
+}
+
+FString ATMManager::GenerateUniqueAlphabetSymbol()
+{
+	FString Name;
+	for (char i = 'a'; i <= 'z'; ++i)
+	{
+		if (!Alphabet.Contains(FString().AppendChar(i))) return Name.AppendChar(i);
+	}
+	return FString("z");
+}
+
 void ATMManager::BeginPlay()
 {
-	//ParseDataFromFile();
+	InitializeDefaultPath();
+	ParseDataFromFile();
 	InitializeTape();
 	DefaultTape = Tape;
 	TapeActor->GenerateTape();
+	ResetTuringMachine(); //Bugfix 
 	//Simulate();
 }
 
@@ -124,17 +150,14 @@ void ATMManager::ParseDataFromFile()
 		int StateIndex = 0;
 		for (auto Data : RowData)
 		{
+			Data.ParseIntoArray(ParsedData, *ReactionSeparator);
+			FReactionStruct NewReaction;
 			if (Data == ErrorSymbol)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("НУ ПИЗДЕЦ БЛЯ"));
-				FReactionStruct NewReaction;
 				NewReaction.bError = true;
-				States[StateIndex].Reactions.Add(NewReaction);
 			}
 			else
 			{
-				Data.ParseIntoArray(ParsedData, *ReactionSeparator);
-				FReactionStruct NewReaction;
 				NewReaction.NewState = ParsedData[0];
 				NewReaction.NewChar = ParsedData[1];
 				if (ParsedData[2] == "r" && ParsedData[2] == "R")
@@ -143,9 +166,9 @@ void ATMManager::ParseDataFromFile()
 					NewReaction.Move = EMoveReaction::L;
 				if (ParsedData[2] == "n" && ParsedData[2] == "N")
 					NewReaction.Move = EMoveReaction::N;
-				States[StateIndex].Reactions.Add(NewReaction);
-
 			}
+			States[StateIndex].Reactions.Add(NewReaction);
+
 			++StateIndex;
 		}
 	}
@@ -225,7 +248,7 @@ void ATMManager::FinishTuringMachine()
 void ATMManager::SimulateSBS()
 {
 	if (!bCorrectTape) return;
-
+	TapeActionStack.Empty();
 	Simulate();
 	Tape = DefaultTape;
 	TapeActor->GenerateTape();
@@ -236,20 +259,22 @@ void ATMManager::SimulateSBS()
 
 void ATMManager::NextActionOnTapeActor()
 {
-	//TapeActor->UpdateSymbolByIndex(TapeActionIndex);
-	if (TapeActionIndex != TapeActionStack.Num()-1) {
-		if (TapeActor->GetSymbolByIndex(TapePointer) != TapeActionStack[TapeActionIndex].Reaction.NewChar)
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Orange, FString::Printf(TEXT("%s != %s"), *TapeActor->GetSymbolByIndex(TapePointer), *TapeActionStack[TapeActionIndex].Reaction.NewChar));
-			TapeActor->SetSymbolByIndex(TapePointer, TapeActionStack[TapeActionIndex].Reaction.NewChar);
-			TapeActor->PlayHeadAnim();
-			GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::NextActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
+	if (TapeActionStack.Num()) {
+		//TapeActor->UpdateSymbolByIndex(TapeActionIndex);
+		if (TapeActionIndex != TapeActionStack.Num() - 1) {
+			if (TapeActor->GetSymbolByIndex(TapePointer) != TapeActionStack[TapeActionIndex].Reaction.NewChar)
+			{
+				//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Orange, FString::Printf(TEXT("%s != %s"), *TapeActor->GetSymbolByIndex(TapePointer), *TapeActionStack[TapeActionIndex].Reaction.NewChar));
+				TapeActor->SetSymbolByIndex(TapePointer, TapeActionStack[TapeActionIndex].Reaction.NewChar);
+				TapeActor->PlayHeadAnim();
+				GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::NextActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
+			}
+			else
+			{
+				NextActionSymbolAnimEnded();
+			}
+			MoveTapePointer(TapeActionStack[TapeActionIndex].Reaction.Move);
 		}
-		else
-		{
-			NextActionSymbolAnimEnded();
-		}
-		MoveTapePointer(TapeActionStack[TapeActionIndex].Reaction.Move);
 	}
 	
 	//TapeActor->UpdateSymbolByIndexWithAnim();
@@ -275,14 +300,16 @@ void ATMManager::PreviousActionSymbolAnimEnded()
 
 void ATMManager::PreviousActionOnTapeActor()
 {
-	if(TapeActionIndex != 0)
-	{
-		TapeActor->MoveTape(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
-		MoveTapePointer(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
+	if (TapeActionStack.IsValidIndex(0)) {
+		if (TapeActionIndex != 0)
+		{
+			TapeActor->MoveTape(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
+			MoveTapePointer(RevertMove(TapeActionStack[TapeActionIndex - 1].Reaction.Move));
 
-		GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::PreviousActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
+			GetWorldTimerManager().SetTimer(WritingTimer, this, &ATMManager::PreviousActionSymbolAnimEnded, TapeActor->SymbolUpdateDuration, false);
 
-		
+
+		}
 	}
 }
 
@@ -302,32 +329,52 @@ void ATMManager::UpdateTapeSymbolByIndex(int Index, FString NewSymbol)
 
 void ATMManager::AddNewState()
 {
-	FStateStruct NewState;
-	FString Name("q");
-	Name.Append(FString::FromInt(FMath::Rand() % 100));
-	NewState.Name = Name;//TEXT("Q");
-	for (int i = 0; i < Alphabet.Num(); ++i)
-	{
-		FReactionStruct NewReaction;
-		NewState.Reactions.Add(NewReaction);
+	if (States.Num() < 9) {
+		FStateStruct NewState;
+		NewState.Name = GenerateUniqueStateName();
+		for (int i = 0; i < Alphabet.Num(); ++i)
+		{
+			FReactionStruct NewReaction;
+			NewState.Reactions.Add(NewReaction);
+		}
+		States.Add(NewState);
+		OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
 	}
-	States.Add(NewState);
-	OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
 }
 
 void ATMManager::AddNewSymbolToAlphabet()
 {
-	FString NewSymbol = Alphabet.Last();
-	Alphabet.Add(NewSymbol.AppendChar('1'));
-	for (int i = 0; i < States.Num(); ++i)
-	{
-		FStateStruct* State = &States[i];
-		FReactionStruct NewReaction;
-		State->Reactions.Add(NewReaction);
-
-		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("BRUH"));
-		//States[i].Name = "P";
-		//State->Name = "P";
+	if (Alphabet.Num() < 15) {
+		FString NewSymbol = GenerateUniqueAlphabetSymbol();
+		Alphabet.Add(NewSymbol);
+		for (int i = 0; i < States.Num(); ++i)
+		{
+			FStateStruct* State = &States[i];
+			FReactionStruct NewReaction;
+			State->Reactions.Add(NewReaction);
+		}
+		OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
 	}
-	OnNewTuringMachineLoaded.Broadcast(); //Recreating widget
+}
+
+void ATMManager::ResetTape()
+{
+	Tape.Empty();
+	InitializeTape();
+	UpdateDefaultTape();
+	TapeActor->GenerateTape();
+}
+
+void ATMManager::InitializeDefaultPath_Implementation()
+{
+}
+
+bool ATMManager::IsStateNameUnique(FString Name)
+{
+	TArray<FString> ExistingNames;
+	for (auto State : States)
+	{
+		ExistingNames.Add(State.Name);
+	}
+	return !ExistingNames.Contains(Name);
 }

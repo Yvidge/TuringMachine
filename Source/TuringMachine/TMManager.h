@@ -96,6 +96,10 @@ private:
 	UPROPERTY()
 	int TapeActionIndex = 0;
 
+	FString GenerateUniqueStateName();
+
+	FString GenerateUniqueAlphabetSymbol();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -191,6 +195,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddNewSymbolToAlphabet();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetTape();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void InitializeDefaultPath();
+	void InitializeDefaultPath_Implementation();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsStateNameUnique(FString Name);
 
 	/*UFUNCTION(BlueprintCallable)
 	void GenerateTape*/

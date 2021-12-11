@@ -44,4 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateLinkedStruct();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeErrorStatus();
 };

@@ -11,6 +11,7 @@ void UUWState::InitializeFromData()
 {
 	if (LinkedStateStruct)
 	{
+		PreviousStateName = LinkedStateStruct->Name;
 		StateLabel->SetText(FText::FromString(LinkedStateStruct->Name));
 		for (int i = 0; i < LinkedStateStruct->Reactions.Num(); ++i)
 		{

@@ -37,7 +37,7 @@ void UUWTuringMachine::InitializeFromData()
 		
 		//SymbolPanel->AddChildToVerticalBox(CreateWidget<UUWButton>(this, ButtonWidgetClass));
 		
-		UUWSymbol* CreatedSpacer = CreateWidget<UUWSymbol>(this, SymbolWidgetClass);
+		//UUWSymbol* CreatedSpacer = CreateWidget<UUWSymbol>(this, SymbolWidgetClass);
 		//WidgetTree->ConstructWidget<UTextBlock>();
 		
 			

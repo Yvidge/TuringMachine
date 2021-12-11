@@ -47,6 +47,9 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 
+	UPROPERTY(BlueprintReadWrite)
+	FString PreviousStateName;
+
 private:
 
 

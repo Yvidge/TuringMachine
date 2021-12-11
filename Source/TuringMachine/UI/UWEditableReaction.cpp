@@ -43,11 +43,17 @@ void UUWEditableReaction::InitializeFromData()
 		{
 			//StateLabel->SetText(FText::FromString(""));
 			StateLabel->SetText(FText::FromString(""));
+			StateLabel->SetIsReadOnly(true);
 			SymbolLabel->SetText(FText::FromString("ERR"));
+			SymbolLabel->SetIsReadOnly(true);
 			MoveLabel->SetText(FText::FromString(""));
+			MoveLabel->SetIsReadOnly(true);
 		}
 		else
 		{
+			SymbolLabel->SetIsReadOnly(false);
+			MoveLabel->SetIsReadOnly(false);
+			StateLabel->SetIsReadOnly(false);
 			StateLabel->SetText(FText::FromString(LinkedReactionStruct->NewState));
 			SymbolLabel->SetText(FText::FromString(LinkedReactionStruct->NewChar));
 			FText MoveText;
@@ -64,11 +70,20 @@ void UUWEditableReaction::UpdateLinkedStruct()
 {
 	if(LinkedReactionStruct)
 	{
-		LinkedReactionStruct->NewState = StateLabel->GetText().ToString();
-		LinkedReactionStruct->NewChar = SymbolLabel->GetText().ToString();
+		if (!LinkedReactionStruct->bError) {
+			LinkedReactionStruct->NewState = StateLabel->GetText().ToString();
+			LinkedReactionStruct->NewChar = SymbolLabel->GetText().ToString();
 
-		if (MoveLabel->GetText().ToString() == "R" || MoveLabel->GetText().ToString() == "r") LinkedReactionStruct->Move = R;
-		else if (MoveLabel->GetText().ToString() == "L" || MoveLabel->GetText().ToString() == "l") LinkedReactionStruct->Move = L;
-		else LinkedReactionStruct->Move = N;
+			if (MoveLabel->GetText().ToString() == "R" || MoveLabel->GetText().ToString() == "r") LinkedReactionStruct->Move = R;
+			else if (MoveLabel->GetText().ToString() == "L" || MoveLabel->GetText().ToString() == "l") LinkedReactionStruct->Move = L;
+			else LinkedReactionStruct->Move = N;
+		}
 	}
+}
+
+void UUWEditableReaction::ChangeErrorStatus()
+{
+	LinkedReactionStruct->bError = !LinkedReactionStruct->bError;
+	InitializeFromData();
+
 }
